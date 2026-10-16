@@ -1,0 +1,39 @@
+# Every tool that the repo needs is pinned here. `mise install` installs them.
+
+[tools]
+lefthook = "2.2.2"
+cocogitto = "7.0.0"
+gitleaks = "8.30.1"
+rumdl = "0.2.79"
+
+[tasks.setup]
+description = "Install the git hooks"
+run = "lefthook install"
+
+[tasks.format]
+description = "Apply every formatter"
+run = "rumdl check --fix ."
+
+[tasks."lint:md"]
+description = "Markdown structure and formatting, per ADR-0001"
+run = "rumdl check ."
+
+[tasks."lint:secrets"]
+description = "Scan the working tree for committed secrets"
+run = "gitleaks dir . --no-banner"
+
+[tasks.lint]
+description = "Every linter"
+depends = ["lint:md", "lint:secrets"]
+
+[tasks.test]
+description = "Run the tests"
+run = "echo 'No tests'"
+
+[tasks.check]
+description = "The gate: run it before you finish a change"
+run = ["mise run lint", "mise run test"]
+
+[tasks.ci]
+description = "Run exactly what CI runs. The pre-push hook and the CI workflow call it"
+run = ["mise run check"]

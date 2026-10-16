@@ -1,4 +1,4 @@
-# JetBrain
+# JetBrains
 .idea/
 .run/
 
@@ -12,6 +12,8 @@
 *.swo
 
 # Environment variable files
-.env
 .env*
 !.env.example
+
+# Planned work stays local, per ADR-0000
+*.local.md

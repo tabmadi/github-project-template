@@ -1,14 +1,27 @@
+# Git hooks. `mise run setup` installs them.
+# A git hook has no active mise shell, so every command runs through mise.
+# `lefthook:` makes the hook scripts find lefthook itself the same way.
+lefthook: mise x -- lefthook
+
 commit-msg:
   commands:
     cog:
-      run: cog verify --ignore-merge-commits --file {1}
+      run: mise x -- cog verify --file {1}
 
 pre-commit:
   commands:
-    lint:
-      run: mise run pre-commit
+    markdown:
+      glob: "*.md"
+      run: mise x -- rumdl check {staged_files}
+    secrets:
+      run: mise x -- gitleaks git --pre-commit --staged --no-banner
 
+# The full CI run, so a push never reaches CI untested. `git push --no-verify` skips it.
 pre-push:
   commands:
     cog:
-      run: cog check --ignore-merge-commits
+      # Only the commits that this push adds. Older history, such as the first commit
+      # that GitHub writes for a repo made from a template, can predate the convention.
+      run: mise x -- cog check origin/master..HEAD
+    ci:
+      run: mise run ci
