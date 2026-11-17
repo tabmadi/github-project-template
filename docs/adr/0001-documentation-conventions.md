@@ -115,7 +115,7 @@ A number is stated when the number is the decision. One test settles it: if the 
 
 ### Line breaks and tables
 
-**Markdown is not hard-wrapped.** Each paragraph, list item, or table row is one line. `MD013` is disabled in `.rumdl.toml` for this reason.
+**Markdown is not hard-wrapped.** Each paragraph, list item, or table row is one line. `MD013` is disabled in `.config/rumdl.toml` for this reason.
 
 **Tables are compact, never padded.** Each pipe has one space inside it, and the delimiter is a bare `---` for any column width. `MD060` enforces it.
 

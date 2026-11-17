@@ -53,24 +53,29 @@ Open the folder in Zed, and run `direnv allow` once. Zed suggests its Nix extens
 
 ```text
 .
+├── .config/
+│   ├── gitleaks.toml       Secret scan rules
+│   ├── rumdl.toml          Markdown rules
+│   └── taplo.toml          TOML format rules
 ├── .github/
 │   ├── ISSUE_TEMPLATE/     Bug, feature, and documentation issue forms
 │   ├── workflows/check.yml The CI gate: just ci
+│   ├── CODE_OF_CONDUCT.md
 │   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── SECURITY.md
 │   └── renovate.json       Updates to the pinned versions
+├── .zed/                   Zed project settings and tasks
 ├── docs/adr/               The decisions of the project: foundations, doc conventions, toolchain
 ├── template/               What only the template needs: its contract, checks, and outputs
+├── .envrc                  Enters the dev shell through direnv
+├── .justfile               Tasks
+├── .yamlfmt.yaml           YAML format rules
+├── biome.json              JSON format rules
+├── cog.toml                Commit types
 ├── flake.nix               The dev shell, the git hooks, and the checks
 ├── flake.lock              The pinned nixpkgs and inputs
-├── .zed/                Zed project settings and tasks
-├── justfile                Tasks
-├── .envrc                  Enters the dev shell through direnv
-├── cog.toml                Commit types
-├── .rumdl.toml             Markdown rules
-├── .gitleaks.toml          Secret scan rules
 ├── AGENTS.md               Hints for coding agents
-├── CODE_OF_CONDUCT.md
-├── SECURITY.md
+├── README.md
 └── LICENSE
 ```
 
@@ -87,9 +92,9 @@ Then follow the steps that it prints:
 1. In the new folder, run `git init` and `git add -A`. A flake sees only the files that git tracks.
 2. Run `nix develop`. It downloads the tools and installs the git hooks.
 3. Add your language tools to the dev shell in `flake.nix`, and your checks under `checks`.
-4. Fill in the `format`, `lint`, and `test` recipes in `justfile` with real commands. Keep the recipe names.
+4. Fill in the `format`, `lint`, and `test` recipes in `.justfile` with real commands. Keep the recipe names.
 5. Rewrite this README with the template skeleton from [readme-template](https://github.com/tabmadi/readme-template).
-6. Update the contacts in `SECURITY.md` and the copyright line in `LICENSE`.
+6. Update the contacts in `.github/SECURITY.md` and the copyright line in `LICENSE`.
 7. Install the [Renovate app](https://github.com/apps/renovate) on the new repository.
 
 ### With the GitHub template button
@@ -107,11 +112,11 @@ The ADRs in [docs/adr](docs/adr/README.md) record every decision and the reason 
 
 ## Contributing
 
-Follow the [Code of Conduct](CODE_OF_CONDUCT.md). Commit messages follow [Conventional Commits](https://www.conventionalcommits.org), and the `commit-msg` hook checks them. Run `just check` before you open a pull request.
+Follow the [Code of Conduct](.github/CODE_OF_CONDUCT.md). Commit messages follow [Conventional Commits](https://www.conventionalcommits.org), and the `commit-msg` hook checks them. Run `just check` before you open a pull request.
 
 ## Security
 
-To report a vulnerability, follow [SECURITY.md](SECURITY.md).
+To report a vulnerability, follow [SECURITY.md](.github/SECURITY.md).
 
 ## License
 

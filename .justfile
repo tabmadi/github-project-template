@@ -41,7 +41,7 @@ lint-toml: in-shell
 lint-yaml: in-shell
     yamlfmt -lint .
 
-# justfile format, per ADR-0100
+# .justfile format, per ADR-0100
 lint-just:
     just --fmt --check
 

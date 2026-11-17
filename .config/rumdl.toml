@@ -1,4 +1,5 @@
-# The Markdown rules for `mise run lint:md`, lefthook, and any editor with the rumdl LSP.
+# The Markdown rules for `just lint-md`, the git hooks, and any editor with the rumdl LSP.
+# rumdl finds this file in .config/ by itself.
 # Rules: https://github.com/rvben/rumdl
 
 [global]

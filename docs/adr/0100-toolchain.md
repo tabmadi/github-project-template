@@ -74,7 +74,9 @@ A recipe that calls a tool runs only inside the dev shell. Outside it, the recip
 
 ### One formatter for each file type
 
-Every text format that git tracks has one formatter in the dev shell. `rumdl` formats Markdown, `nixfmt` formats Nix, Biome formats JSON and JSONC, Taplo formats TOML, yamlfmt formats YAML, and `just --fmt` formats the `justfile`. `.editorconfig` sets the indentation and line endings, and each formatter reads it or matches it.
+Every text format that git tracks has one formatter in the dev shell. `rumdl` formats Markdown, `nixfmt` formats Nix, Biome formats JSON and JSONC, Taplo formats TOML, yamlfmt formats YAML, and `just --fmt` formats the `.justfile`. `.editorconfig` sets the indentation and line endings, and each formatter reads it or matches it.
+
+A config file that a tool can find in `.config/` lives there. A tool that finds its config only at the repo root keeps it there: `biome.json`, `.yamlfmt.yaml`, `cog.toml`, and the language configs. Taplo and gitleaks read their path from `flake.nix`, which sets it in the dev shell, the checks, and the hooks.
 
 `just format` runs every formatter. Each one also has a check under `checks` in `flake.nix`, so a file that is not formatted fails the gate.
 

@@ -35,10 +35,16 @@
             outputs = { };
           };
 
+      # The configs in .config/ that a tool does not find by itself. The paths are relative to the repo root.
+      configEnv = {
+        TAPLO_CONFIG = ".config/taplo.toml";
+        GITLEAKS_CONFIG = ".config/gitleaks.toml";
+      };
+
       # A check runs a command on a writable copy of the tracked files, so a tool can write its cache.
       check =
         pkgs: name: tools: command:
-        pkgs.runCommand name { nativeBuildInputs = tools; } ''
+        pkgs.runCommand name ({ nativeBuildInputs = tools; } // configEnv) ''
           cp -r ${self} source
           chmod -R u+w source
           cd source
@@ -67,7 +73,7 @@
             toml = {
               enable = true;
               name = "taplo";
-              entry = "${pkgs.taplo}/bin/taplo fmt --check";
+              entry = "${pkgs.taplo}/bin/taplo fmt --config ${configEnv.TAPLO_CONFIG} --check";
               files = "\\.toml$";
             };
             yaml = {
@@ -80,13 +86,13 @@
               enable = true;
               name = "just --fmt";
               entry = "${pkgs.just}/bin/just --fmt --check";
-              files = "(^|/)justfile$";
+              files = "(^|/)\\.?justfile$";
               pass_filenames = false;
             };
             secrets = {
               enable = true;
               name = "gitleaks";
-              entry = "${pkgs.gitleaks}/bin/gitleaks git --pre-commit --staged --no-banner";
+              entry = "${pkgs.gitleaks}/bin/gitleaks git --config ${configEnv.GITLEAKS_CONFIG} --pre-commit --staged --no-banner";
               pass_filenames = false;
             };
             commit-message = {
@@ -132,6 +138,7 @@
             nixd
             nixfmt
           ];
+          env = configEnv;
           shellHook = (hooks pkgs).shellHook;
         };
       });
