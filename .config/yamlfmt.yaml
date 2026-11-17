@@ -1,5 +1,0 @@
-# The YAML formatter, per ADR-0100. yamlfmt does not look in .config/, so every call passes -conf with this path.
-formatter:
-  type: basic
-  retain_line_breaks_single: true
-gitignore_excludes: true

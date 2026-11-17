@@ -1,2 +1,0 @@
-# The TOML formatter, per ADR-0100.
-exclude = [".direnv/**", "result/**"]

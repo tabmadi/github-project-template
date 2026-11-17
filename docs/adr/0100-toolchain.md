@@ -40,9 +40,7 @@ Nix is the one mechanism for every language. A repo adds its language tools to t
 | `git-hooks.nix`, with `prek` | Git hooks, declared in `flake.nix` |
 | cocogitto | Commit message shape |
 | rumdl | Markdown style |
-| Biome | JSON and JSONC format |
-| Taplo | TOML format |
-| yamlfmt | YAML format |
+| dprint | JSON, JSONC, TOML, and YAML format |
 | gitleaks | Secret scanning |
 | Renovate | Updates to `flake.lock` and to the GitHub Actions |
 
@@ -74,11 +72,17 @@ A recipe that calls a tool runs only inside the dev shell. Outside it, the recip
 
 ### One formatter for each file type
 
-Every text format that git tracks has one formatter in the dev shell. `rumdl` formats Markdown, `nixfmt` formats Nix, Biome formats JSON and JSONC, Taplo formats TOML, yamlfmt formats YAML, and `just --fmt` formats the `.justfile`. Each formatter config sets two spaces and LF line endings, or the formatter uses them by default. The repo has no `.editorconfig`: the formatters and their checks are the only rules.
+Every text format that git tracks has one formatter in the dev shell. `rumdl` formats Markdown, `nixfmt` formats Nix, dprint formats JSON, JSONC, TOML, and YAML, and `just --fmt` formats the `.justfile`. Each formatter uses two spaces and LF line endings, by its config or by default. The repo has no `.editorconfig`: the formatters and their checks are the only rules.
 
-Every tool config lives in `.config/`. `rumdl` finds its config there by itself. Taplo and gitleaks read their path from an environment variable that `flake.nix` sets in the dev shell, the checks, and the hooks. yamlfmt and cog take the path as a flag, so every recipe, check, hook, and Zed setting passes it. The `just` recipes are the one way to run a tool, so a tool that someone calls without the flag is outside the contract.
+Every tool config lives in `.config/`. `rumdl` finds its config there by itself. gitleaks reads its path from an environment variable that `flake.nix` sets in the dev shell, the checks, and the hooks. cog takes the path as a flag, so every recipe, check, hook, and workflow passes it. The `just` recipes are the one way to run a tool, so a tool that someone calls without the flag is outside the contract.
 
-`biome.json` is the one exception, and it stays at the repo root. Biome finds `.config/biome.json`, but its project scan then reads the same file as a second root config and stops with an error. `(ref: biomejs/biome#7588)`
+dprint is one formatter for four file types, with one config. Its plugins are WebAssembly files from `nixpkgs`, so they are pinned by `flake.lock` and dprint downloads nothing. dprint takes the config and the plugins only as flags, so the `dprint` command in the dev shell is a wrapper from `flake.nix` that adds both.
+
+| Option for JSON, TOML, and YAML | Verdict |
+| --- | --- |
+| Biome, Taplo, and yamlfmt | Three tools and three configs. Biome cannot load its config from `.config/` |
+| Prettier | It needs Node.js |
+| **dprint with its plugins** | **Chosen. One small tool, one config in `.config/`, and pinned plugins** |
 
 `just format` runs every formatter. Each one also has a check under `checks` in `flake.nix`, so a file that is not formatted fails the gate.
 
@@ -156,7 +160,7 @@ Renovate needs the Renovate GitHub app on the repository. Without it, the pins g
 - The git hooks are declared in `flake.nix`, and entering the dev shell installs them.
 - The language servers and formatters of the editor come from the dev shell.
 - Every text format that git tracks has one formatter in the dev shell, and a check in `flake.nix`. `(CI: ci)`
-- Every tool config lives in `.config/`, except `biome.json` at the repo root. A tool that does not find its config there gets the path from `flake.nix` or a flag.
+- Every tool config lives in `.config/`. A tool that does not find its config there gets the path from `flake.nix` or a flag.
 - The editor formats only with the formatters of the repo.
 - `.zed/` holds project settings only. No check depends on the editor.
 - `just check` passes before a change is finished.

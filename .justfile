@@ -16,9 +16,7 @@ setup:
 format: in-shell
     rumdl check --fix .
     nix fmt flake.nix
-    biome format --write .
-    taplo fmt
-    yamlfmt -conf .config/yamlfmt.yaml .
+    dprint fmt
     just --fmt
 
 # Markdown structure and formatting, per ADR-0001
@@ -29,24 +27,16 @@ lint-md: in-shell
 lint-secrets: in-shell
     gitleaks dir . --no-banner
 
-# JSON format, per ADR-0100
-lint-json: in-shell
-    biome format .
-
-# TOML format, per ADR-0100
-lint-toml: in-shell
-    taplo fmt --check
-
-# YAML format, per ADR-0100
-lint-yaml: in-shell
-    yamlfmt -conf .config/yamlfmt.yaml -lint .
+# JSON, JSONC, TOML, and YAML format, per ADR-0100
+lint-data: in-shell
+    dprint check
 
 # .justfile format, per ADR-0100
 lint-just:
     just --fmt --check
 
 # Run every linter
-lint: lint-md lint-secrets lint-json lint-toml lint-yaml lint-just
+lint: lint-md lint-secrets lint-data lint-just
 
 # Run the tests
 test:

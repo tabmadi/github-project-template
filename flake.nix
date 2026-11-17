@@ -37,15 +37,36 @@
 
       # The configs in .config/ that a tool does not find by itself. The paths are relative to the repo root.
       configEnv = {
-        TAPLO_CONFIG = ".config/taplo.toml";
         GITLEAKS_CONFIG = ".config/gitleaks.toml";
       };
 
       # The configs in .config/ that a tool finds only through a flag. Every call of the tool passes it.
       configFlags = {
-        yamlfmt = "-conf .config/yamlfmt.yaml";
         cog = "--config .config/cog.toml";
       };
+
+      # The one formatter of JSON, JSONC, TOML, and YAML, per ADR-0100. dprint takes its config
+      # and its plugins only as flags after the subcommand, so this wrapper adds both to every call.
+      dprint =
+        pkgs:
+        let
+          plugins = with pkgs.dprint-plugins; [
+            dprint-plugin-json
+            dprint-plugin-toml
+            g-plane-pretty_yaml
+          ];
+          pluginFiles = pkgs.lib.concatMapStringsSep " " (plugin: "${plugin}/plugin.wasm") plugins;
+        in
+        pkgs.writeShellScriptBin "dprint" ''
+          case "''${1:-}" in
+            fmt | check | file-paths | output-file-paths | resolved-config | output-resolved-config)
+              command=$1
+              shift
+              exec ${pkgs.dprint}/bin/dprint "$command" --plugins ${pluginFiles} --config .config/dprint.json "$@"
+              ;;
+            *) exec ${pkgs.dprint}/bin/dprint "$@" ;;
+          esac
+        '';
 
       # A check runs a command on a writable copy of the tracked files, so a tool can write its cache.
       check =
@@ -70,23 +91,11 @@
               entry = "${pkgs.rumdl}/bin/rumdl check";
               files = "\\.md$";
             };
-            json = {
+            data = {
               enable = true;
-              name = "biome";
-              entry = "${pkgs.biome}/bin/biome format --no-errors-on-unmatched";
-              files = "\\.jsonc?$";
-            };
-            toml = {
-              enable = true;
-              name = "taplo";
-              entry = "${pkgs.taplo}/bin/taplo fmt --config ${configEnv.TAPLO_CONFIG} --check";
-              files = "\\.toml$";
-            };
-            yaml = {
-              enable = true;
-              name = "yamlfmt";
-              entry = "${pkgs.yamlfmt}/bin/yamlfmt ${configFlags.yamlfmt} -lint";
-              files = "\\.ya?ml$";
+              name = "dprint";
+              entry = "${dprint pkgs}/bin/dprint check";
+              files = "\\.(jsonc?|toml|ya?ml)$";
             };
             justfile = {
               enable = true;
@@ -136,10 +145,8 @@
             cocogitto
             rumdl
             gitleaks
-            # The formatters of JSON, TOML, and YAML, per ADR-0100.
-            biome
-            taplo
-            yamlfmt
+            # The formatter of JSON, TOML, and YAML, per ADR-0100.
+            (dprint pkgs)
             # The language server and formatter of flake.nix, for the editor.
             nixd
             nixfmt
@@ -154,9 +161,7 @@
         {
           lint-md = check pkgs "lint-md" [ pkgs.rumdl ] "rumdl check .";
           lint-secrets = check pkgs "lint-secrets" [ pkgs.gitleaks ] "gitleaks dir . --no-banner";
-          lint-json = check pkgs "lint-json" [ pkgs.biome ] "biome format --vcs-enabled=false .";
-          lint-toml = check pkgs "lint-toml" [ pkgs.taplo ] "taplo fmt --check";
-          lint-yaml = check pkgs "lint-yaml" [ pkgs.yamlfmt ] "yamlfmt ${configFlags.yamlfmt} -lint .";
+          lint-data = check pkgs "lint-data" [ (dprint pkgs) ] "DPRINT_CACHE_DIR=$TMPDIR/dprint dprint check";
           lint-just = check pkgs "lint-just" [ pkgs.just ] "just --fmt --check";
         }
         // templateScope.checks pkgs
