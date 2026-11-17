@@ -164,7 +164,7 @@ A reader with B1 English reads every text in the repo. An LLM gets closed lists 
 
 Some ideas need two or three short sentences, not one long sentence. This is accepted: the reader reads faster and misreads less.
 
-No task checks the profile, the banned constructs, or the comment rules. A document that passes `lint:md` can still violate this ADR. Review is the gate for the rest, and the closed lists give a reviewer a mechanical reason to reject a text.
+No task checks the profile, the banned constructs, or the comment rules. A document that passes `lint-md` can still violate this ADR. Review is the gate for the rest, and the closed lists give a reviewer a mechanical reason to reject a text.
 
 ## Rules
 
@@ -184,8 +184,8 @@ No task checks the profile, the banned constructs, or the comment rules. A docum
 - A decision lives in `docs/adr/`, a procedure in `docs/guide/`, and a lookup in `docs/reference/`. The root `README.md` says what the repo is and how to start.
 - No text uses emoji: not in a heading, a list, a commit title, or task output.
 - Markdown is not hard-wrapped: one line per paragraph, list item, or table row.
-- Tables are compact, never padded: one space inside each pipe and a bare `---` delimiter. `(CI: lint:md)`
-- Markdown passes `rumdl`. `(CI: lint:md)`
+- Tables are compact, never padded: one space inside each pipe and a bare `---` delimiter. `(CI: lint-md)`
+- Markdown passes `rumdl`. `(CI: lint-md)`
 - The first answer to the need for a comment is to extract a named function. `(ref: Fowler, Refactoring)`
 - A comment carries only what an expert reader cannot derive from the code and the ADR set. Doubt resolves to deletion.
 - A comment is one paragraph of at most three lines. One line is the norm.

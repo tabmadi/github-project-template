@@ -14,6 +14,13 @@
 # Environment variable files
 .env*
 !.env.example
+!.envrc
 
 # Planned work stays local, per ADR-0000
 *.local.md
+
+# Nix, per ADR-0100
+.direnv/
+result
+result-*
+.pre-commit-config.yaml

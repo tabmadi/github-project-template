@@ -1,0 +1,104 @@
+# The toolchain, the git hooks, and the checks, per ADR-0100.
+{
+  description = "The language-agnostic base for a new repository";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    {
+      self,
+      nixpkgs,
+      git-hooks,
+    }:
+    let
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
+      forEachSystem = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+
+      # A check runs a command on a writable copy of the tracked files, so a tool can write its cache.
+      check =
+        pkgs: name: tools: command:
+        pkgs.runCommand name { nativeBuildInputs = tools; } ''
+          cp -r ${self} source
+          chmod -R u+w source
+          cd source
+          ${command}
+          touch $out
+        '';
+
+      hooks =
+        pkgs:
+        git-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
+          src = ./.;
+          package = pkgs.prek;
+          hooks = {
+            markdown = {
+              enable = true;
+              name = "rumdl";
+              entry = "${pkgs.rumdl}/bin/rumdl check";
+              files = "\\.md$";
+            };
+            secrets = {
+              enable = true;
+              name = "gitleaks";
+              entry = "${pkgs.gitleaks}/bin/gitleaks git --pre-commit --staged --no-banner";
+              pass_filenames = false;
+            };
+            commit-message = {
+              enable = true;
+              name = "cog verify";
+              entry = "${pkgs.cocogitto}/bin/cog verify --file";
+              stages = [ "commit-msg" ];
+            };
+            # Only the commits that this push adds. Older history, such as the first commit
+            # that GitHub writes for a repo made from a template, can predate the convention.
+            commit-range = {
+              enable = true;
+              name = "cog check";
+              entry = "${pkgs.cocogitto}/bin/cog check origin/master..HEAD";
+              stages = [ "pre-push" ];
+              pass_filenames = false;
+              always_run = true;
+            };
+            ci = {
+              enable = true;
+              name = "just ci";
+              entry = "${pkgs.just}/bin/just ci";
+              stages = [ "pre-push" ];
+              pass_filenames = false;
+              always_run = true;
+            };
+          };
+        };
+    in
+    {
+      devShells = forEachSystem (pkgs: {
+        default = pkgs.mkShellNoCC {
+          packages = with pkgs; [
+            just
+            cocogitto
+            rumdl
+            gitleaks
+          ];
+          shellHook = (hooks pkgs).shellHook;
+        };
+      });
+
+      checks = forEachSystem (pkgs: {
+        lint-md = check pkgs "lint-md" [ pkgs.rumdl ] "rumdl check .";
+        lint-secrets = check pkgs "lint-secrets" [ pkgs.gitleaks ] "gitleaks dir . --no-banner";
+      });
+
+      formatter = forEachSystem (pkgs: pkgs.nixfmt);
+    };
+}

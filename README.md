@@ -8,8 +8,9 @@ It holds no application code. A repo made from it adds the language tools and fi
 
 | Tool | Owns |
 | --- | --- |
-| [mise](https://mise.jdx.dev) | Tool versions and tasks |
-| [lefthook](https://github.com/evilmartians/lefthook) | Git hooks |
+| [Nix](https://nixos.org) with flakes | Tool versions, the dev shell, and the sandboxed checks |
+| [just](https://just.systems) | Tasks |
+| [git-hooks.nix](https://github.com/cachix/git-hooks.nix) | Git hooks |
 | [cocogitto](https://docs.cocogitto.io) | Conventional Commits checks |
 | [rumdl](https://github.com/rvben/rumdl) | Markdown lint |
 | [gitleaks](https://github.com/gitleaks/gitleaks) | Secret scan |
@@ -17,32 +18,31 @@ It holds no application code. A repo made from it adds the language tools and fi
 
 ## Getting started
 
-1. Install [mise](https://mise.jdx.dev/getting-started.html).
-2. Clone the repo and install the tools and hooks:
+1. Install [Nix](https://nixos.org/download) and enable flakes. Optionally, install [direnv](https://direnv.net) with [nix-direnv](https://github.com/nix-community/nix-direnv) to enter the dev shell on `cd`.
+2. Clone the repo and enter the dev shell. The first entry downloads every tool and installs the git hooks:
 
    ```bash
    git clone git@github.com:tabmadi/github-project-template.git
    cd github-project-template
-   mise install
-   mise run setup
+   nix develop
    ```
 
 3. Run the gate:
 
    ```bash
-   mise run check
+   just check
    ```
 
 ## Tasks
 
-| Task | Does |
+| Recipe | Does |
 | --- | --- |
-| `mise run setup` | Installs the git hooks |
-| `mise run format` | Applies every formatter |
-| `mise run lint` | Runs every linter: `lint:md` and `lint:secrets` |
-| `mise run test` | Runs the tests. Here it is a placeholder |
-| `mise run check` | Runs `lint` and `test`. Run it before you finish a change |
-| `mise run ci` | Runs exactly what CI runs. The `pre-push` hook runs it too |
+| `just setup` | Builds the dev shell and installs the git hooks |
+| `just format` | Applies every formatter |
+| `just lint` | Runs every linter: `lint-md` and `lint-secrets` |
+| `just test` | Runs the tests. Here it is a placeholder |
+| `just check` | Runs `lint` and `test`. Run it before you finish a change |
+| `just ci` | Runs `nix flake check`, exactly what CI runs. The `pre-push` hook runs it too |
 
 ## Layout
 
@@ -50,12 +50,14 @@ It holds no application code. A repo made from it adds the language tools and fi
 .
 ├── .github/
 │   ├── ISSUE_TEMPLATE/     Bug, feature, and documentation issue forms
-│   ├── workflows/check.yml The CI gate: mise run ci
+│   ├── workflows/check.yml The CI gate: just ci
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   └── renovate.json       Updates to the pinned versions
 ├── docs/adr/               The decisions: foundations, doc conventions, toolchain
-├── .mise.toml              Tool pins and tasks
-├── .lefthook.yml           Git hooks
+├── flake.nix               The dev shell, the git hooks, and the checks
+├── flake.lock              The pinned nixpkgs and inputs
+├── justfile                Tasks
+├── .envrc                  Enters the dev shell through direnv
 ├── cog.toml                Commit types
 ├── .rumdl.toml             Markdown rules
 ├── .gitleaks.toml          Secret scan rules
@@ -68,8 +70,8 @@ It holds no application code. A repo made from it adds the language tools and fi
 ## Using this template
 
 1. Create a repository from this template on GitHub.
-2. Add your language tools to `[tools]` in `.mise.toml`, pinned to an exact version.
-3. Fill in the `format`, `lint`, and `test` tasks with real commands. Keep the task names.
+2. Add your language tools to the dev shell in `flake.nix`, and your checks under `checks`.
+3. Fill in the `format`, `lint`, and `test` recipes in `justfile` with real commands. Keep the recipe names.
 4. Rewrite this README with the template skeleton from [readme-template](https://github.com/tabmadi/readme-template).
 5. Update the contacts in `SECURITY.md` and the copyright line in `LICENSE`.
 6. Install the [Renovate app](https://github.com/apps/renovate) on the new repository.
@@ -80,7 +82,7 @@ The ADRs in [docs/adr](docs/adr/README.md) record every decision and the reason 
 
 ## Contributing
 
-Follow the [Code of Conduct](CODE_OF_CONDUCT.md). Commit messages follow [Conventional Commits](https://www.conventionalcommits.org), and the `commit-msg` hook checks them. Run `mise run check` before you open a pull request.
+Follow the [Code of Conduct](CODE_OF_CONDUCT.md). Commit messages follow [Conventional Commits](https://www.conventionalcommits.org), and the `commit-msg` hook checks them. Run `just check` before you open a pull request.
 
 ## Security
 

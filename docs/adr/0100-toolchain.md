@@ -1,41 +1,111 @@
 # ADR-0100: Toolchain
 
 **Status:** Accepted
-**Decides:** The pinned toolchain, the task surface, what runs at commit and push time, and how the pins stay current.
+**Decides:** Nix pins every tool and runs every check, `just` runs every task, and the same checks run at commit time, at push time, and in CI.
 
 ## Context
 
-The value of a template is that its tool choices are made and reproducible. Three failures matter. The first is a tool that resolves from `$PATH`, at the version the machine has. The second is a check that only CI runs, which every local commit passes. The third is a pin that nobody updates.
+The value of a template is that its tool choices are made and reproducible. Four failures matter:
+
+1. A tool resolves from `$PATH`, at whatever version the machine has.
+2. Two machines have the same tool version, but the tool links against different system libraries, so it behaves differently.
+3. A check runs only in CI, so every local commit passes it.
+4. A pin goes stale because nobody updates it.
+
+Repos made from this one use many languages. Some ship artifacts, and some run their own machines. A mechanism that pins tools for one language, or only on a laptop, leaves the other cases to a second tool with its own edge cases.
+
+### Considered options
+
+| Option | Pins | Down to system libraries | Builds artifacts and machines | Verdict |
+| --- | --- | --- | --- | --- |
+| A version manager, such as mise or asdf | The version of each tool | No. A tool links against the libraries of the machine, and some tools compile on install | No | Covers failure 1 only |
+| Dev Containers | A container image | Yes, inside the container | Images only | Every command runs in a container. The image itself drifts unless it is built from pins |
+| devbox, Flox, or devenv | Every tool, through Nix | Yes | Partly | A second layer with its own config on top of Nix. The underlying tool is the same |
+| **Nix with flakes** | **Every tool and every dependency of each tool, through one lock file** | **Yes** | **Yes: packages, images, and whole machines with NixOS** | **Chosen** |
+| Guix | The same model as Nix | Yes | Yes | A smaller package set, and an init system that no other tool here uses |
 
 ## Decision
 
-`mise` pins every tool and is the only command surface. A command is `mise run <task>`. A bare tool call resolves from `$PATH` at an unpinned version.
+### Nix pins every tool
+
+`flake.nix` declares a dev shell that holds every tool of the repo. `flake.lock` pins the exact commit of `nixpkgs` and of every other input. From that commit, every tool and every library under it is fixed. Every engineer, every CI run, and every machine that builds from the flake gets the same tools.
+
+Nix is the one mechanism for every language. A repo adds its language tools to the dev shell, not to a second version manager.
 
 | Tool | Owns |
 | --- | --- |
-| mise | Tool versions and tasks |
-| lefthook | Git hooks |
+| Nix with flakes | Tool versions, the dev shell, and the sandboxed checks |
+| `just` | Tasks |
+| `git-hooks.nix`, with `prek` | Git hooks, declared in `flake.nix` |
 | cocogitto | Commit message shape |
 | rumdl | Markdown style |
 | gitleaks | Secret scanning |
-| Renovate | Updates to the pins |
+| Renovate | Updates to `flake.lock` and to the GitHub Actions |
 
-| Task | Does |
+`nixpkgs` follows the `nixpkgs-unstable` branch, so tool versions stay current. A commit of `nixpkgs` has one version of each package. A repo selects a major line by attribute, such as `go_1_27`. The patch version follows the lock. A version that `nixpkgs` does not have comes from an overlay in `flake.nix`.
+
+Each engineer enters the dev shell with `nix develop`, or automatically with direnv through the committed `.envrc`.
+
+### `just` runs every task
+
+Nix decides what is installed. A task runner decides what runs. These are two jobs, so they are two tools.
+
+| Option | Verdict |
 | --- | --- |
-| `setup` | Installs the dependencies and the git hooks |
+| Flake apps through `nix run .#task` | Each task is a derivation, so each change waits for an evaluation. There are no task dependencies or arguments |
+| mise tasks | A full task runner, but mise is also a version manager. That second role overlaps with Nix |
+| Make | Its file-target model and its whitespace rules do not fit a list of commands |
+| **`just`** | **One small binary from the dev shell. Recipes have dependencies, arguments, and doc comments. A reader understands the file without learning a tool** |
+
+| Recipe | Does |
+| --- | --- |
+| `setup` | Builds the dev shell and installs the git hooks |
 | `format` | Applies every formatter |
 | `lint` | Runs every linter |
 | `test` | Runs the tests |
-| `check` | Runs `lint` and `test`. It is the gate before a change is finished |
-| `ci` | Runs exactly what CI runs |
+| `check` | Runs `lint` and `test`. It is the fast gate before a change is finished |
+| `ci` | Runs `nix flake check`. It is exactly what CI runs |
 
-A hook has no active mise shell, so each hook command runs its tool through `mise x` or a `mise` task. The `pre-commit` hook runs the fast checks on the staged files. The `pre-push` hook runs `cog check` on the commits that the push adds, and `mise run ci`. Commit messages follow Conventional Commits, and `cog` verifies them in the `commit-msg` hook.
+A recipe that calls a tool runs only inside the dev shell. Outside it, the recipe stops with a message, so no tool resolves from `$PATH`.
 
-The CI workflow runs `mise run ci` on every push to `master` and on every pull request. On a pull request, it also verifies the title with `cog`, because the title becomes the squash commit. The title reaches the shell only through an environment variable.
+### The same checks everywhere
 
-Renovate opens a pull request when a pin in `.mise.toml` or a GitHub Action has a new version. The CI gate decides, and Renovate merges nothing.
+Every check of the repo is a derivation under `checks` in `flake.nix`. `nix flake check` builds each one in the Nix sandbox, from the files that git tracks. A local change that git does not track cannot make a check pass.
+
+| When | What runs |
+| --- | --- |
+| Commit | The `pre-commit` hook runs the fast checks on the staged files. The `commit-msg` hook runs `cog verify` |
+| Push | The `pre-push` hook runs `cog check` on the commits that the push adds, and `just ci` |
+| CI | The workflow runs `just ci` inside `nix develop`, on every push to `master` and on every pull request |
+
+`git-hooks.nix` writes each hook with the store path of its tool. So a hook works from any terminal or editor, inside the dev shell or not. Entering the dev shell installs the hooks.
+
+On a pull request, CI also verifies the title with `cog`, because the title becomes the squash commit. The title reaches the shell only through an environment variable.
+
+### Nix beyond the toolchain
+
+A repo made from this one adopts the layers of Nix that its kind needs. The dev shell and the checks apply to every repo.
+
+| Kind of repo | Builds its artifacts with Nix | Declares its machines with NixOS |
+| --- | --- | --- |
+| A library or a tool with no deploy | Not applicable | Not applicable |
+| An app that a managed provider runs | When the provider takes an image | No. The provider runs the machine |
+| An app on its own machines, with no orchestrator | Yes | Yes |
+| An app on an orchestrator | Yes | Only the hosts outside the cluster. The nodes run the OS of the orchestrator |
 
 ## Consequences
+
+Every engineer installs Nix and enables flakes. Nix runs on Linux and macOS. On Windows, it runs only inside WSL.
+
+The Nix language is a skill that every maintainer learns. An evaluation error is often long, so a small, regular `flake.nix` is a requirement, not a style.
+
+The first entry into the dev shell downloads every tool from the binary cache. Later entries take no download. A tool that the cache does not hold builds from source, and that takes longer.
+
+Upstream Nix marks flakes as an experimental feature, so each engineer enables them with one setting. A committed `flake.lock` keeps building the same tools at its pinned commits, whatever upstream changes.
+
+`nixpkgs-unstable` moves fast. The weekly lock update brings new versions of every tool at once. The CI gate decides, and a failing update stays open until the code or the pin is fixed.
+
+CI downloads the tools on each run unless the workflow has a binary cache.
 
 A push runs the full gate on the local machine first, so a slow gate makes every push slow. `git push --no-verify` skips it, and CI still runs it.
 
@@ -43,10 +113,13 @@ Renovate needs the Renovate GitHub app on the repository. Without it, the pins g
 
 ## Rules
 
-- Every tool is pinned in `.mise.toml`. No tool is resolved from `$PATH`.
-- Every command is a `mise` task with a `description`. A CI workflow step calls a task, never a tool directly.
-- A git hook runs every tool through `mise x` or a `mise` task.
+- Every tool comes from the dev shell of `flake.nix`. No tool is resolved from outside it.
+- `flake.lock` is committed. Renovate updates it, and the CI gate decides.
+- A language tool is added to the dev shell, never to a second version manager.
+- Every task is a `just` recipe with a doc comment. A recipe that calls a tool runs only inside the dev shell.
+- Every check that CI runs is a derivation under `checks` in `flake.nix`. `(CI: ci)`
+- The git hooks are declared in `flake.nix`, and entering the dev shell installs them.
+- `just check` passes before a change is finished.
+- `just ci` is the only CI step after setup, and it runs inside `nix develop`. `(CI: ci)`
 - Commit messages and pull request titles follow Conventional Commits with the type set in `cog.toml`. `(ref: Conventional Commits 1.0.0)`
-- `mise run check` passes before a change is finished.
-- `mise run ci` is the only CI step after setup. `(CI: check)`
 - A workflow never puts event text, such as a pull request title, directly into a `run` script.
