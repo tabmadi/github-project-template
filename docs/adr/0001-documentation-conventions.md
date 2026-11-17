@@ -41,7 +41,7 @@ Three or more steps are a numbered list, and each step starts with its verb. Thr
 
 ### Punctuation
 
-Prose uses only the period, the comma, the colon, and the possessive apostrophe.
+Prose uses only the period, the comma, the colon, and the possessive apostrophe. `(CI: lint-prose)`
 
 | Instead of | Write |
 | --- | --- |
@@ -122,20 +122,20 @@ These comments are never committed:
 
 ## Consequences
 
-No task checks the Simple English profile, the banned constructs, or the comment rules. Review is the gate, and the closed lists give the reviewer a clear reason to reject a text.
+tablint checks most rules of this ADR: the profile, the punctuation, the banned constructs, the comment rules, and the shape of each ADR. Review is the gate for the rest, such as one idea per sentence.
 
 ## Rules
 
-- Every text uses the Simple English profile: B1 words, kept technical terms, one term per concept, no idioms, no Latin abbreviations, and no contractions. `(ref: ASD-STE100)`
+- Every text uses the Simple English profile: B1 words, kept technical terms, one term per concept, no idioms, no Latin abbreviations, and no contractions. `(ref: ASD-STE100)` `(CI: lint-prose)`
 - Prose is plain language in active voice and present tense. `(ref: ISO 24495-1, Google dev-docs)`
-- A sentence has one idea and at most 25 words.
+- A sentence has one idea and at most 25 words. `(CI: lint-prose)`
 - Prose punctuation is the period, the comma, the colon, and the possessive apostrophe.
-- The em dash, the en dash, the ellipsis, curly quotes, and emoji appear in no tracked text file. Third-party text adopted verbatim is exempt.
+- The em dash, the en dash, the ellipsis, curly quotes, and emoji appear in no tracked text file. Third-party text adopted verbatim is exempt. `(CI: lint-prose)`
 - Three or more steps are a numbered list. Three or more items with two or more shared attributes are a table.
-- No document or comment holds chronology, intensifiers, hedges, meta-commentary, questions, planned work, or implementation status.
+- No document or comment holds chronology, intensifiers, hedges, meta-commentary, questions, planned work, or implementation status. `(CI: lint-prose)`
 - A number is stated only when doubling it would change the decision.
-- No tracked file links to an untracked one.
+- No tracked file links to an untracked one. `(CI: lint-prose)`
 - A decision lives in `docs/adr/`, a procedure in `docs/guide/`, and a lookup in `docs/reference/`.
 - Markdown is not hard-wrapped, tables are compact, and every Markdown file passes `rumdl`. `(CI: lint-md)`
-- A comment passes the deletion, genre, and length tests, and states one of the allowed facts.
-- A `TODO` cites an issue or an ADR.
+- A comment passes the deletion, genre, and length tests, and states one of the allowed facts. `(CI: lint-prose)`
+- A `TODO` cites an issue or an ADR. `(CI: lint-prose)`

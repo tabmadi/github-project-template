@@ -8,6 +8,12 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # The linter of prose, comments, and ADRs, per ADR-0001. A new version is a new tag here.
+    tablint = {
+      url = "github:tabmadi/tablint/v0.2.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.git-hooks.follows = "git-hooks";
+    };
   };
 
   outputs =
@@ -15,6 +21,7 @@
       self,
       nixpkgs,
       git-hooks,
+      tablint,
     }:
     let
       systems = [
@@ -68,6 +75,8 @@
           esac
         '';
 
+      tablintPackage = pkgs: tablint.packages.${pkgs.stdenv.hostPlatform.system}.default;
+
       # A check runs a command on a writable copy of the tracked files, so a tool can write its cache.
       check =
         pkgs: name: tools: command:
@@ -96,6 +105,12 @@
               name = "dprint";
               entry = "${dprint pkgs}/bin/dprint check";
               files = "\\.(jsonc?|toml|ya?ml)$";
+            };
+            prose = {
+              enable = true;
+              name = "tablint";
+              entry = "${tablintPackage pkgs}/bin/tablint check";
+              pass_filenames = false;
             };
             justfile = {
               enable = true;
@@ -145,6 +160,7 @@
             cocogitto
             rumdl
             gitleaks
+            (tablintPackage pkgs)
             # The formatter of JSON, TOML, and YAML, per ADR-0100.
             (dprint pkgs)
             # The language server and formatter of flake.nix, for the editor.
@@ -159,6 +175,7 @@
       checks = forEachSystem (
         pkgs:
         {
+          lint-prose = check pkgs "lint-prose" [ (tablintPackage pkgs) ] "tablint check";
           lint-md = check pkgs "lint-md" [ pkgs.rumdl ] "rumdl check .";
           lint-secrets = check pkgs "lint-secrets" [ pkgs.gitleaks ] "gitleaks dir . --no-banner";
           lint-data = check pkgs "lint-data" [ (dprint pkgs) ] "DPRINT_CACHE_DIR=$TMPDIR/dprint dprint check";

@@ -56,7 +56,32 @@
     "root": {
       "inputs": {
         "git-hooks": "git-hooks",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "tablint": "tablint"
+      }
+    },
+    "tablint": {
+      "inputs": {
+        "git-hooks": [
+          "git-hooks"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794886699,
+        "narHash": "sha256-wgikbIdF5I0q1fNx2W3vTcRf5+v+FhJDV7NnqbEKAR4=",
+        "owner": "tabmadi",
+        "repo": "tablint",
+        "rev": "278928f1db4165b7f105fc998016d0010b0c5373",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tabmadi",
+        "ref": "v0.2.0",
+        "repo": "tablint",
+        "type": "github"
       }
     }
   },

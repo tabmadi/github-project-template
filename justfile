@@ -19,6 +19,10 @@ format: in-shell
     dprint fmt
     just --fmt
 
+# Prose, comments, and ADRs, per ADR-0001
+lint-prose: in-shell
+    tablint check
+
 # Markdown structure and formatting, per ADR-0001
 lint-md: in-shell
     rumdl check .
@@ -36,7 +40,7 @@ lint-just:
     just --fmt --check
 
 # Run every linter
-lint: lint-md lint-secrets lint-data lint-just
+lint: lint-prose lint-md lint-secrets lint-data lint-just
 
 # Run the tests
 test:

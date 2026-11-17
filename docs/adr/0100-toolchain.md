@@ -36,6 +36,7 @@ A repo can also hold more than one language, ship artifacts, or run its own mach
 | `git-hooks.nix`, with `prek` | Git hooks, declared in `flake.nix` |
 | cocogitto | Commit message shape |
 | rumdl | Markdown style |
+| tablint | Prose, comments, and ADRs, per ADR-0001 |
 | dprint | JSON, JSONC, TOML, and YAML format |
 | gitleaks | Secret scanning |
 | Renovate | Updates to `flake.lock` and to the GitHub Actions |
