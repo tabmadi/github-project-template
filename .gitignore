@@ -2,14 +2,43 @@
 .idea/
 .run/
 
-# Visual Studio Code
+# Visual Studio Code and Visual Studio
 .vscode/
-.history
+.history/
+.vs/
 
-# Vim
+# Vim and Neovim
 *~
 *.swp
 *.swo
+
+# Emacs
+\#*\#
+.#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Helix
+.helix/
+
+# AI coding agents. AGENTS.md is the one shared file, per AGENTS.md
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.codex/
+.opencode/
+opencode.json
+opencode.jsonc
+.cursor/
+.cursorrules
+.windsurf/
+.windsurfrules
+.gemini/
+GEMINI.md
+.aider*
+.github/copilot-instructions.md
 
 # Environment variable files
 .env*
