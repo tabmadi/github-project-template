@@ -1,7 +1,12 @@
 // Project settings for Zed, per ADR-0100. Zed loads the Nix dev shell through direnv, so every
 // formatter and language server below is the pinned version from flake.nix. Zed formats on save
-// only with a formatter of the repo, so its result matches `just format`.
+// only with a formatter of the repo, so its result matches `just format`. The repo has no
+// .editorconfig, so the indentation and whitespace rules for typing are here.
 {
+  "tab_size": 2,
+  "hard_tabs": false,
+  "ensure_final_newline_on_save": true,
+  "remove_trailing_whitespace_on_save": true,
   "format_on_save": "off",
   "languages": {
     "JSON": {
@@ -23,6 +28,7 @@
       }
     },
     "Markdown": {
+      "remove_trailing_whitespace_on_save": false,
       "format_on_save": "on",
       "formatter": {
         "external": {
@@ -60,7 +66,7 @@
       "formatter": {
         "external": {
           "command": "yamlfmt",
-          "arguments": ["-in"]
+          "arguments": ["-conf", ".config/yamlfmt.yaml", "-in"]
         }
       }
     }

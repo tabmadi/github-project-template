@@ -24,5 +24,5 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           TITLE: ${{ github.event.pull_request.title }}
-        run: nix develop --command cog verify "$TITLE"
+        run: nix develop --command cog --config .config/cog.toml verify "$TITLE"
       - run: nix develop --command just ci

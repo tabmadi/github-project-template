@@ -1,4 +1,5 @@
 # cocogitto configuration: Conventional Commits with a fixed set of types.
+# cog does not look in .config/, so every call passes --config with this path.
 
 from_latest_tag = false
 ignore_merge_commits = true

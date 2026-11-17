@@ -54,9 +54,11 @@ Open the folder in Zed, and run `direnv allow` once. Zed suggests its Nix extens
 ```text
 .
 ├── .config/
+│   ├── cog.toml            Commit types
 │   ├── gitleaks.toml       Secret scan rules
 │   ├── rumdl.toml          Markdown rules
-│   └── taplo.toml          TOML format rules
+│   ├── taplo.toml          TOML format rules
+│   └── yamlfmt.yaml        YAML format rules
 ├── .github/
 │   ├── ISSUE_TEMPLATE/     Bug, feature, and documentation issue forms
 │   ├── workflows/check.yml The CI gate: just ci
@@ -69,9 +71,7 @@ Open the folder in Zed, and run `direnv allow` once. Zed suggests its Nix extens
 ├── template/               What only the template needs: its contract, checks, and outputs
 ├── .envrc                  Enters the dev shell through direnv
 ├── .justfile               Tasks
-├── .yamlfmt.yaml           YAML format rules
-├── biome.json              JSON format rules
-├── cog.toml                Commit types
+├── biome.json              JSON format rules. Biome cannot load it from .config/
 ├── flake.nix               The dev shell, the git hooks, and the checks
 ├── flake.lock              The pinned nixpkgs and inputs
 ├── AGENTS.md               Hints for coding agents

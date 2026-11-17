@@ -1,5 +1,0 @@
-# The YAML formatter, per ADR-0100. Indentation follows .editorconfig.
-formatter:
-  type: basic
-  retain_line_breaks_single: true
-gitignore_excludes: true

@@ -18,7 +18,7 @@ format: in-shell
     nix fmt flake.nix
     biome format --write .
     taplo fmt
-    yamlfmt .
+    yamlfmt -conf .config/yamlfmt.yaml .
     just --fmt
 
 # Markdown structure and formatting, per ADR-0001
@@ -39,7 +39,7 @@ lint-toml: in-shell
 
 # YAML format, per ADR-0100
 lint-yaml: in-shell
-    yamlfmt -lint .
+    yamlfmt -conf .config/yamlfmt.yaml -lint .
 
 # .justfile format, per ADR-0100
 lint-just:

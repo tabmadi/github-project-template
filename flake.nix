@@ -41,6 +41,12 @@
         GITLEAKS_CONFIG = ".config/gitleaks.toml";
       };
 
+      # The configs in .config/ that a tool finds only through a flag. Every call of the tool passes it.
+      configFlags = {
+        yamlfmt = "-conf .config/yamlfmt.yaml";
+        cog = "--config .config/cog.toml";
+      };
+
       # A check runs a command on a writable copy of the tracked files, so a tool can write its cache.
       check =
         pkgs: name: tools: command:
@@ -79,7 +85,7 @@
             yaml = {
               enable = true;
               name = "yamlfmt";
-              entry = "${pkgs.yamlfmt}/bin/yamlfmt -lint";
+              entry = "${pkgs.yamlfmt}/bin/yamlfmt ${configFlags.yamlfmt} -lint";
               files = "\\.ya?ml$";
             };
             justfile = {
@@ -98,7 +104,7 @@
             commit-message = {
               enable = true;
               name = "cog verify";
-              entry = "${pkgs.cocogitto}/bin/cog verify --file";
+              entry = "${pkgs.cocogitto}/bin/cog ${configFlags.cog} verify --file";
               stages = [ "commit-msg" ];
             };
             # Only the commits that this push adds. Older history, such as the first commit
@@ -106,7 +112,7 @@
             commit-range = {
               enable = true;
               name = "cog check";
-              entry = "${pkgs.cocogitto}/bin/cog check origin/master..HEAD";
+              entry = "${pkgs.cocogitto}/bin/cog ${configFlags.cog} check origin/master..HEAD";
               stages = [ "pre-push" ];
               pass_filenames = false;
               always_run = true;
@@ -150,7 +156,7 @@
           lint-secrets = check pkgs "lint-secrets" [ pkgs.gitleaks ] "gitleaks dir . --no-banner";
           lint-json = check pkgs "lint-json" [ pkgs.biome ] "biome format --vcs-enabled=false .";
           lint-toml = check pkgs "lint-toml" [ pkgs.taplo ] "taplo fmt --check";
-          lint-yaml = check pkgs "lint-yaml" [ pkgs.yamlfmt ] "yamlfmt -lint .";
+          lint-yaml = check pkgs "lint-yaml" [ pkgs.yamlfmt ] "yamlfmt ${configFlags.yamlfmt} -lint .";
           lint-just = check pkgs "lint-just" [ pkgs.just ] "just --fmt --check";
         }
         // templateScope.checks pkgs
