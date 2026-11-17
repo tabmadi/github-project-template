@@ -5,14 +5,14 @@
 
 ## Context
 
-The value of a template is that its tool choices are made and reproducible. Four failures matter:
+A tool choice is worth something only when every machine reproduces it. Four failures matter:
 
 1. A tool resolves from `$PATH`, at whatever version the machine has.
 2. Two machines have the same tool version, but the tool links against different system libraries, so it behaves differently.
 3. A check runs only in CI, so every local commit passes it.
 4. A pin goes stale because nobody updates it.
 
-Repos made from this one use many languages. Some ship artifacts, and some run their own machines. A mechanism that pins tools for one language, or only on a laptop, leaves the other cases to a second tool with its own edge cases.
+A repo can hold more than one language. It may ship artifacts, and it may run its own machines. A mechanism that pins tools for one language, or only on a laptop, leaves the other cases to a second tool with its own edge cases.
 
 ### Considered options
 
@@ -84,7 +84,7 @@ On a pull request, CI also verifies the title with `cog`, because the title beco
 
 ### Nix beyond the toolchain
 
-A repo made from this one adopts the layers of Nix that its kind needs. The dev shell and the checks apply to every repo.
+This repo adopts the layers of Nix that its kind needs. The dev shell and the checks apply to every kind.
 
 | Kind of repo | Builds its artifacts with Nix | Declares its machines with NixOS |
 | --- | --- | --- |

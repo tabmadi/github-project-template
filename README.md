@@ -53,7 +53,8 @@ It holds no application code. A repo made from it adds the language tools and fi
 │   ├── workflows/check.yml The CI gate: just ci
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   └── renovate.json       Updates to the pinned versions
-├── docs/adr/               The decisions: foundations, doc conventions, toolchain
+├── docs/adr/               The decisions of the project: foundations, doc conventions, toolchain
+├── template/               What only the template needs: its contract, checks, and outputs
 ├── flake.nix               The dev shell, the git hooks, and the checks
 ├── flake.lock              The pinned nixpkgs and inputs
 ├── justfile                Tasks
@@ -69,16 +70,25 @@ It holds no application code. A repo made from it adds the language tools and fi
 
 ## Using this template
 
-1. Create a repository from this template on GitHub.
-2. Add your language tools to the dev shell in `flake.nix`, and your checks under `checks`.
-3. Fill in the `format`, `lint`, and `test` recipes in `justfile` with real commands. Keep the recipe names.
-4. Rewrite this README with the template skeleton from [readme-template](https://github.com/tabmadi/readme-template).
-5. Update the contacts in `SECURITY.md` and the copyright line in `LICENSE`.
-6. Install the [Renovate app](https://github.com/apps/renovate) on the new repository.
+Make a new project with Nix. It copies every file except the `template/` folder, which holds what only the template needs:
+
+```bash
+nix flake new -t github:tabmadi/github-project-template my-project
+```
+
+Then follow the steps that it prints:
+
+1. Run `git init` and `git add -A`. A flake sees only the files that git tracks.
+2. Run `nix develop`. It downloads the tools and installs the git hooks.
+3. Add your language tools to the dev shell in `flake.nix`, and your checks under `checks`.
+4. Fill in the `format`, `lint`, and `test` recipes in `justfile` with real commands. Keep the recipe names.
+5. Rewrite this README with the template skeleton from [readme-template](https://github.com/tabmadi/readme-template).
+6. Update the contacts in `SECURITY.md` and the copyright line in `LICENSE`.
+7. Install the [Renovate app](https://github.com/apps/renovate) on the new repository.
 
 ## Decisions
 
-The ADRs in [docs/adr](docs/adr/README.md) record every decision and the reason for it. [ADR-0001](docs/adr/0001-documentation-conventions.md) is the house style for all text.
+The ADRs in [docs/adr](docs/adr/README.md) record every decision and the reason for it. `template/adr/0000-template-contract.md` records what makes this repo a template. [ADR-0001](docs/adr/0001-documentation-conventions.md) is the house style for all text.
 
 ## Contributing
 

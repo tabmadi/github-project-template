@@ -2,6 +2,8 @@
 
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
+import? 'template/justfile'
+
 # List the recipes
 default:
     @just --list

@@ -25,6 +25,16 @@
       ];
       forEachSystem = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
 
+      # The template scope adds its own checks and outputs. A copy has no template/ folder, so it adds nothing.
+      templateScope =
+        if builtins.pathExists ./template/scope.nix then
+          import ./template/scope.nix { inherit self nixpkgs; }
+        else
+          {
+            checks = _: { };
+            outputs = { };
+          };
+
       # A check runs a command on a writable copy of the tracked files, so a tool can write its cache.
       check =
         pkgs: name: tools: command:
@@ -97,8 +107,10 @@
       checks = forEachSystem (pkgs: {
         lint-md = check pkgs "lint-md" [ pkgs.rumdl ] "rumdl check .";
         lint-secrets = check pkgs "lint-secrets" [ pkgs.gitleaks ] "gitleaks dir . --no-banner";
-      });
+      }
+      // templateScope.checks pkgs);
 
       formatter = forEachSystem (pkgs: pkgs.nixfmt);
-    };
+    }
+    // templateScope.outputs;
 }

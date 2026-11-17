@@ -1,36 +1,36 @@
 # ADR-0000: Foundations
 
 - **Status:** Accepted
-- **Decides:** What this repo is, what a generated repo inherits from it, and the ADR process itself.
+- **Decides:** What this repo holds, the recipe contract, and the ADR process itself.
 
 ## Context
 
-Every other template in the set starts from this repo. A file here is copied into each generated repo, and the copies do not link back. So a line that is right for one project and wrong for the next is a defect in every copy.
-
 A repo without written decisions loses the reason for each choice. The next engineer then removes a check that exists for a reason, or adds a second tool for a job that one tool already does.
+
+A repo also needs fixed entry points. An engineer or a coding agent that knows the name of the gate runs it without reading every file first.
 
 ## Decision
 
-This repo is a language-agnostic scaffold. It holds the community health files, the issue and pull request templates, the shared toolchain, and the documentation convention. It holds no application code.
+This repo holds the community health files, the issue and pull request forms, a pinned toolchain, and the documentation convention. Its code and its own decisions build on that base.
 
-**The task names are a contract.** `setup`, `format`, `lint`, `test`, `check`, and `ci` exist in every generated repo, per [ADR-0100](0100-toolchain.md). A generated repo fills them with real commands. It does not rename or delete them.
+**The recipe names are a contract.** `setup`, `format`, `lint`, `test`, `check`, and `ci` exist in this repo, per [ADR-0100](0100-toolchain.md). Each one runs the real commands of the repo. Their names do not change.
 
 **Every decision is an ADR.** An ADR states what is true of the repo. It is law, not a plan: no roadmap, no follow-ups, and no remark on unfinished work. A gap between an ADR and the code is unfinished work.
 
-**The ADR set has a size.** A repo of the template size has three ADRs: this one, [ADR-0001](0001-documentation-conventions.md) for the documentation conventions, and [ADR-0100](0100-toolchain.md) for the toolchain. A generated repo adds an ADR when it makes a decision that a reader would otherwise question.
+**An ADR is added for a decision that a reader would otherwise question.** [ADR-0001](0001-documentation-conventions.md) holds the documentation conventions, and [ADR-0100](0100-toolchain.md) holds the toolchain.
 
 **Planned work stays local.** It lives in an untracked `*.local.md` file, and `.gitignore` excludes these files.
 
 ## Consequences
 
-The same text exists in many repos. The [blueprints](https://github.com/tabmadi/blueprints) repo keeps the copies in step: a change starts here and goes to every repo of the same size in one pass.
+An ADR is written for the engineer who maintains the repo, not for a person who decides whether to adopt it. Selection guidance belongs in the root `README.md`.
 
-A generated repo inherits these ADRs. So an ADR is written for the engineer who maintains the repo, not for a person who decides whether to adopt it. Selection guidance belongs in the root `README.md`.
+An ADR names other ADRs only. A link to a README, a guide, or another repo breaks when that file moves, and the ADR outlives it.
 
 ## Rules
 
 - Every ADR carries a `Status`, a one-sentence `Decides` line, and a flat `Rules` section.
 - An ADR states what is true, never what is intended. No roadmap, follow-up, or status section.
-- The tasks `setup`, `format`, `lint`, `test`, `check`, and `ci` exist in every repo made from this one.
-- Nothing in this repo is specific to one language or one project.
+- An ADR links to other ADRs only.
+- The recipes `setup`, `format`, `lint`, `test`, `check`, and `ci` exist in this repo.
 - Planned work lives in an untracked `*.local.md` file. No committed file links to one.

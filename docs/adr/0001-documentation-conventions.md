@@ -93,7 +93,7 @@ These are not prose, and the punctuation rules do not apply to them:
 | `docs/adr/` | one decision per file |
 | `docs/guide/` | a procedure someone executes |
 | `docs/reference/` | a lookup, a registry, or live state |
-| `README.md` at the root | what the repo is, who it is for, and how to start. It follows the skeleton for the size of the repo in [readme-template](https://github.com/tabmadi/readme-template) |
+| `README.md` at the root | what the repo is, who it is for, and how to start |
 
 ### Banned constructs
 
@@ -171,7 +171,7 @@ No task checks the profile, the banned constructs, or the comment rules. A docum
 - Prose follows ISO 24495-1 plain language and the Google developer-docs voice: present tense and active. `(ref: ISO 24495-1, Google dev-docs)`
 - Every text in the repo uses the Simple English profile: docs, ADRs, comments, commit titles, task descriptions, error messages, and UI copy. `(ref: ASD-STE100)`
 - General words are at CEFR B1, with the most common word for the meaning. Technical names and technical verbs are always allowed, and are never replaced with a general word that changes the meaning.
-- One term names one concept across the set, and a word keeps one meaning.
+- One term names one concept across the docs of this repo, and a word keeps one meaning.
 - A single verb replaces a phrasal verb when one exists. No idioms.
 - Latin abbreviations and contractions are not used: no `e.g.`, `i.e.`, `etc.`, or `vs.`, and no `don't` or `it's`.
 - A sentence has one idea and at most 25 words. A sentence under `docs/guide/` or in a numbered procedure has at most 20 words.

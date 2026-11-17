@@ -6,6 +6,7 @@ This guide is for any coding agent that works in this repo. `AGENTS.md` is the o
 
 ## Read first
 
+- If a `template/` folder exists, read `template/AGENTS.md` before anything else.
 - [ADR-0000](docs/adr/0000-foundations.md): what this repo is and the ADR process.
 - [docs/adr/README.md](docs/adr/README.md): the ADR index. To check a convention, grep the `Rules` sections first.
 
@@ -21,8 +22,7 @@ Every text follows the Simple English profile in [ADR-0001](docs/adr/0001-docume
 ## Working in the repo
 
 - Work inside the dev shell: run `nix develop`, or allow direnv. Then run every task as `just <recipe>`.
-- Everything here is inherited by every repo made from it. Add nothing that is specific to one language or one project.
-- Keep the task names. A generated repo fills them in, per [ADR-0100](docs/adr/0100-toolchain.md).
+- Keep the recipe names, per [ADR-0000](docs/adr/0000-foundations.md).
 - Add a tool to the dev shell in `flake.nix`, never to a second version manager.
 - Before you finish a change, run `just check`. `just ci` runs the full sandboxed gate that CI runs.
 - Commit messages are a Conventional Commits title only, with no body. Never push unless asked to.
