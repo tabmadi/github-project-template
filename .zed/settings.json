@@ -1,22 +1,66 @@
-// Project settings for Zed, per ADR-0100. Zed loads the Nix dev shell through direnv,
-// so every language server and formatter below is the pinned version from flake.nix.
+// Project settings for Zed, per ADR-0100. Zed loads the Nix dev shell through direnv, so every
+// formatter and language server below is the pinned version from flake.nix. Zed formats on save
+// only with a formatter of the repo, so its result matches `just format`.
 {
-  "format_on_save": "on",
+  "format_on_save": "off",
   "languages": {
+    "JSON": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "biome",
+          "arguments": ["format", "--stdin-file-path={buffer_path}"]
+        }
+      }
+    },
+    "JSONC": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "biome",
+          "arguments": ["format", "--stdin-file-path={buffer_path}"]
+        }
+      }
+    },
     "Markdown": {
       "format_on_save": "on",
       "formatter": {
         "external": {
           "command": "rumdl",
-          "arguments": ["fmt", "--stdin", "--stdin-filename", "{buffer_path}", "--silent"]
+          "arguments": [
+            "fmt",
+            "--stdin",
+            "--stdin-filename",
+            "{buffer_path}",
+            "--silent"
+          ]
         }
       }
     },
     "Nix": {
       "language_servers": ["nixd", "!nil"],
+      "format_on_save": "on",
       "formatter": {
         "external": {
           "command": "nixfmt"
+        }
+      }
+    },
+    "TOML": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "taplo",
+          "arguments": ["fmt", "-"]
+        }
+      }
+    },
+    "YAML": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "yamlfmt",
+          "arguments": ["-in"]
         }
       }
     }

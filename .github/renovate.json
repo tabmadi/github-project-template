@@ -10,7 +10,10 @@
   "separateMajorMinor": true,
   "schedule": ["before 6am on monday"],
   "nix": { "enabled": true },
-  "lockFileMaintenance": { "enabled": true, "schedule": ["before 6am on monday"] },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"]
+  },
   "packageRules": [
     {
       "description": "A major version is a decision, so it is proposed alone and never joins a group.",
