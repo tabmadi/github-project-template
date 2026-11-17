@@ -9,6 +9,7 @@ It holds no application code. A repo made from it adds the language tools and fi
 | Tool | Owns |
 | --- | --- |
 | [Nix](https://nixos.org) with flakes | Tool versions, the dev shell, and the sandboxed checks |
+| [tabnix](https://github.com/tabmadi/tabnix) | The shared dev shell, git hooks, and checks |
 | [just](https://just.systems) | Tasks |
 | [Zed](https://zed.dev) | The supported editor, with project settings in `.zed/` |
 | [git-hooks.nix](https://github.com/cachix/git-hooks.nix) | Git hooks |
@@ -79,7 +80,7 @@ Open the folder in Zed, and run `direnv allow` once. Zed suggests its Nix extens
 └── LICENSE
 ```
 
-## Using this template
+## Starting a project
 
 Make a new project with Nix. It copies every file except the `template/` folder, which holds what only the template needs. This is the preferred way:
 
@@ -93,7 +94,7 @@ Then follow the steps that it prints:
 2. Run `nix develop`. It downloads the tools and installs the git hooks.
 3. Add your language tools to the dev shell in `flake.nix`, and your checks under `checks`.
 4. Fill in the `format`, `lint`, and `test` recipes in `justfile` with real commands. Keep the recipe names.
-5. Rewrite this README with the template skeleton from [readme-template](https://github.com/tabmadi/readme-template).
+5. Rewrite this README for the project, with the sections that ADR-0001 sets for its kind of repo.
 6. Update the contacts in `.github/SECURITY.md` and the copyright line in `LICENSE`.
 7. Install the [Renovate app](https://github.com/apps/renovate) on the new repository.
 

@@ -26,14 +26,15 @@ A repo can also hold more than one language, ship artifacts, or run its own mach
 
 ### Nix pins every tool
 
-`flake.nix` declares a dev shell with every tool of the repo. `flake.lock` pins `nixpkgs` and every other input, so every engineer, CI run, and machine gets the same tools.
+`flake.nix` imports the tabnix module, which holds the shared dev shell, git hooks, and checks. The repo adds only its own tools. `flake.lock` pins `nixpkgs` and every other input, so every engineer, CI run, and machine gets the same tools.
 
 | Tool | Owns |
 | --- | --- |
 | Nix with flakes | Tool versions, the dev shell, and the sandboxed checks |
 | `just` | Tasks |
 | Zed | The supported editor, with its project settings in `.zed/` |
-| `git-hooks.nix`, with `prek` | Git hooks, declared in `flake.nix` |
+| tabnix, with flake-parts | The shared dev shell, git hooks, and checks |
+| `git-hooks.nix`, with `prek` | Git hooks, declared through tabnix |
 | cocogitto | Commit message shape |
 | rumdl | Markdown style |
 | tablint | Prose, comments, and ADRs, per ADR-0001 |
@@ -78,7 +79,7 @@ A recipe that calls a tool stops outside the dev shell, so no tool comes from `$
 
 Each formatter uses two spaces and LF line endings. The repo has no `.editorconfig`: the formatters and their checks are the only rules. `just format` runs every formatter, and a check in `flake.nix` fails on a file that is not formatted.
 
-dprint is one tool with one config for four file types. Its plugins are WebAssembly files from `nixpkgs`, pinned by `flake.lock`. dprint takes its config and plugins only as flags, so `flake.nix` wraps the `dprint` command to add both.
+dprint is one tool with one config for four file types. Its plugins are WebAssembly files from `nixpkgs`, pinned by `flake.lock`. dprint takes its config and plugins only as flags, so tabnix wraps the `dprint` command to add both.
 
 | Option for JSON, TOML, and YAML | Verdict |
 | --- | --- |
@@ -95,9 +96,9 @@ Every tool config lives in `.config/`. A file that its tool reads only at the ro
 | Tool | How it finds its config in `.config/` |
 | --- | --- |
 | rumdl | By itself |
-| gitleaks | An environment variable that `flake.nix` sets |
+| gitleaks | An environment variable that tabnix sets |
 | cog | `--config` in every recipe, hook, and workflow |
-| dprint | The wrapper in `flake.nix` |
+| dprint | The wrapper in tabnix |
 
 The `just` recipes are the only supported way to run a tool. A tool that someone runs by hand without its flag is outside this contract.
 
@@ -148,6 +149,7 @@ A repo uses the layers of Nix that its kind needs.
 - A push runs the full gate locally first, so a slow gate makes every push slow. `git push --no-verify` skips it, and CI still runs it.
 - CI downloads every tool on each run unless the workflow has a binary cache.
 - Renovate needs its GitHub app on the repo. Without it, the pins go stale.
+- A change to a shared hook or check reaches the repo only when the tabnix input moves to a new tag.
 
 ## Rules
 
@@ -155,7 +157,7 @@ A repo uses the layers of Nix that its kind needs.
 - `flake.lock` is committed. Renovate updates it, and the CI gate decides.
 - Every task is a `just` recipe with a doc comment. A recipe that calls a tool runs only inside the dev shell.
 - Every check is a derivation under `checks` in `flake.nix`, and `just ci` is the only CI step after setup. `(CI: ci)`
-- The git hooks are declared in `flake.nix`.
+- The git hooks are declared in `flake.nix`, through tabnix.
 - Every tracked text format has one formatter in the dev shell and a check in `flake.nix`. `(CI: ci)`
 - A file that a person reads or runs is visible at the root. Every tool config lives in `.config/`, unless its tool reads it only at the root.
 - The editor formats only with the formatters of the repo. No check depends on the editor.

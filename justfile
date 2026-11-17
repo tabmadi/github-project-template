@@ -15,7 +15,7 @@ setup:
 # Apply every formatter
 format: in-shell
     rumdl check --fix .
-    nix fmt flake.nix
+    nixfmt $(git ls-files '*.nix')
     dprint fmt
     just --fmt
 
@@ -35,12 +35,16 @@ lint-secrets: in-shell
 lint-data: in-shell
     dprint check
 
+# Nix format, per ADR-0100
+lint-nix: in-shell
+    nixfmt --check $(git ls-files '*.nix')
+
 # justfile format, per ADR-0100
 lint-just:
     just --fmt --check
 
 # Run every linter
-lint: lint-prose lint-md lint-secrets lint-data lint-just
+lint: lint-prose lint-md lint-secrets lint-data lint-nix lint-just
 
 # Run the tests
 test:
