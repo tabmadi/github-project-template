@@ -2,9 +2,6 @@
 // so every language server and formatter below is the pinned version from flake.nix.
 {
   "format_on_save": "on",
-  "auto_install_extensions": {
-    "nix": true
-  },
   "languages": {
     "Markdown": {
       "format_on_save": "on",
