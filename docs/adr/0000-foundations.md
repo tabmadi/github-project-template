@@ -19,8 +19,6 @@ This repo holds the community health files, the issue and pull request forms, a 
 
 **An ADR is added for a decision that a reader would otherwise question.** [ADR-0001](0001-documentation-conventions.md) holds the documentation conventions, and [ADR-0100](0100-toolchain.md) holds the toolchain.
 
-**Planned work stays local.** It lives in an untracked `*.local.md` file, and `.gitignore` excludes these files.
-
 ## Consequences
 
 An ADR is written for the engineer who maintains the repo, not for a person who decides whether to adopt it. Selection guidance belongs in the root `README.md`.
@@ -33,4 +31,3 @@ An ADR names other ADRs only. A link to a README, a guide, or another repo break
 - An ADR states what is true, never what is intended. No roadmap, follow-up, or status section.
 - An ADR links to other ADRs only.
 - The recipes `setup`, `format`, `lint`, `test`, `check`, and `ci` exist in this repo.
-- Planned work lives in an untracked `*.local.md` file. No committed file links to one.

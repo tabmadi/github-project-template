@@ -156,7 +156,7 @@ An exported identifier gets a doc comment only when the comment states a fact th
 | Commented-out code | Git holds it |
 | Changelog, author, or date comments | Git holds them |
 | Decorative banners and section dividers | The file structure is the structure |
-| A `TODO` with no issue or ADR behind it | It is planned work, and [ADR-0000](0000-foundations.md) keeps planned work out of the committed record |
+| A `TODO` with no issue or ADR behind it | It is planned work, and no committed document or comment holds planned work |
 
 ## Consequences
 

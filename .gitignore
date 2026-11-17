@@ -16,7 +16,7 @@
 !.env.example
 !.envrc
 
-# Planned work stays local, per ADR-0000
+# Personal notes that stay out of git
 *.local.md
 
 # Nix, per ADR-0100

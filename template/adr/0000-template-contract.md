@@ -26,6 +26,8 @@ A template file may name a project file. A project file never links into `templa
 
 `nix flake new -t github:tabmadi/github-project-template <dir>` copies the project scope. The `templates` output filters out `template/`, and its welcome text lists the first steps of the new project.
 
+GitHub's template button copies every file, `template/` included. In that copy, `just init` prints the same first steps and removes `template/` with git. The first commit of the project then holds no template scope.
+
 ### What this template holds
 
 Nothing here is specific to one language or one project. A file that is right for one project and wrong for the next is a defect in every copy.

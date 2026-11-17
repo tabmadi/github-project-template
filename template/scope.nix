@@ -33,7 +33,7 @@ in
       welcomeText = ''
         # A new project
 
-        1. Run `git init` and `git add -A`. A flake sees only the files that git tracks.
+        1. In a new folder, run `git init` and `git add -A`. A flake sees only the files that git tracks.
         2. Run `nix develop`. It downloads the tools and installs the git hooks.
         3. Rewrite `README.md` for this project.
         4. Update the contacts in `SECURITY.md` and the copyright line in `LICENSE`.
