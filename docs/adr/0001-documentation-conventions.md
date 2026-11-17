@@ -41,7 +41,7 @@ Three or more steps are a numbered list, and each step starts with its verb. Thr
 
 ### Punctuation
 
-Prose uses only the period, the comma, the colon, and the possessive apostrophe. `(CI: lint-prose)`
+Prose uses only the period, the comma, the colon, and the possessive apostrophe.
 
 | Instead of | Write |
 | --- | --- |
@@ -84,6 +84,15 @@ A number is part of a decision only when doubling it would change the decision.
 | `docs/guide/` | A procedure that someone follows |
 | `docs/reference/` | A lookup, a registry, or live state |
 | `README.md` at the root | What the repo is, who it is for, and how to start |
+
+The README of each kind of repo has these sections, in this order. A section with nothing to say is left out.
+
+| Kind of repo | README sections |
+| --- | --- |
+| Template | Stack, Getting started, Editor, Tasks, Layout, Configuration, Starting a project, Decisions, Contributing, Security, License |
+| Example | What it shows, Run it, How it works, What is missing, Tasks, License |
+| Platform | Find your profile, What forces decomposition, When not to use this, Stack, Getting started, Layout, Decisions, Using this repo, License |
+| Tool | What it does, Getting started, Configuration, Decisions, License |
 
 ### Markdown layout
 
@@ -129,13 +138,14 @@ tablint checks most rules of this ADR: the profile, the punctuation, the banned 
 - Every text uses the Simple English profile: B1 words, kept technical terms, one term per concept, no idioms, no Latin abbreviations, and no contractions. `(ref: ASD-STE100)` `(CI: lint-prose)`
 - Prose is plain language in active voice and present tense. `(ref: ISO 24495-1, Google dev-docs)`
 - A sentence has one idea and at most 25 words. `(CI: lint-prose)`
-- Prose punctuation is the period, the comma, the colon, and the possessive apostrophe.
+- Prose punctuation is the period, the comma, the colon, and the possessive apostrophe. `(CI: lint-prose)`
 - The em dash, the en dash, the ellipsis, curly quotes, and emoji appear in no tracked text file. Third-party text adopted verbatim is exempt. `(CI: lint-prose)`
 - Three or more steps are a numbered list. Three or more items with two or more shared attributes are a table.
 - No document or comment holds chronology, intensifiers, hedges, meta-commentary, questions, planned work, or implementation status. `(CI: lint-prose)`
 - A number is stated only when doubling it would change the decision.
 - No tracked file links to an untracked one. `(CI: lint-prose)`
 - A decision lives in `docs/adr/`, a procedure in `docs/guide/`, and a lookup in `docs/reference/`.
+- The README has the sections of its kind of repo, in order.
 - Markdown is not hard-wrapped, tables are compact, and every Markdown file passes `rumdl`. `(CI: lint-md)`
 - A comment passes the deletion, genre, and length tests, and states one of the allowed facts. `(CI: lint-prose)`
 - A `TODO` cites an issue or an ADR. `(CI: lint-prose)`
