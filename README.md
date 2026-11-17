@@ -10,6 +10,7 @@ It holds no application code. A repo made from it adds the language tools and fi
 | --- | --- |
 | [Nix](https://nixos.org) with flakes | Tool versions, the dev shell, and the sandboxed checks |
 | [just](https://just.systems) | Tasks |
+| [Zed](https://zed.dev) | The supported editor, with project settings in `.zed/` |
 | [git-hooks.nix](https://github.com/cachix/git-hooks.nix) | Git hooks |
 | [cocogitto](https://docs.cocogitto.io) | Conventional Commits checks |
 | [rumdl](https://github.com/rvben/rumdl) | Markdown lint |
@@ -18,7 +19,7 @@ It holds no application code. A repo made from it adds the language tools and fi
 
 ## Getting started
 
-1. Install [Nix](https://nixos.org/download) and enable flakes. Optionally, install [direnv](https://direnv.net) with [nix-direnv](https://github.com/nix-community/nix-direnv) to enter the dev shell on `cd`.
+1. Install [Nix](https://nixos.org/download) and enable flakes. For the editor, also install [Zed](https://zed.dev), and [direnv](https://direnv.net) with [nix-direnv](https://github.com/nix-community/nix-direnv). direnv enters the dev shell on `cd`, and Zed loads it through direnv.
 2. Clone the repo and enter the dev shell. The first entry downloads every tool and installs the git hooks:
 
    ```bash
@@ -32,6 +33,10 @@ It holds no application code. A repo made from it adds the language tools and fi
    ```bash
    just check
    ```
+
+## Editor
+
+Open the folder in Zed, and run `direnv allow` once. Zed then uses the language servers and formatters of the dev shell, formats on save, and lists every recipe under `task: spawn`. Any other editor works through the same dev shell.
 
 ## Tasks
 
@@ -57,6 +62,7 @@ It holds no application code. A repo made from it adds the language tools and fi
 ├── template/               What only the template needs: its contract, checks, and outputs
 ├── flake.nix               The dev shell, the git hooks, and the checks
 ├── flake.lock              The pinned nixpkgs and inputs
+├── .zed/                Zed project settings and tasks
 ├── justfile                Tasks
 ├── .envrc                  Enters the dev shell through direnv
 ├── cog.toml                Commit types

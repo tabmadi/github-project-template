@@ -1,0 +1,27 @@
+// Project settings for Zed, per ADR-0100. Zed loads the Nix dev shell through direnv,
+// so every language server and formatter below is the pinned version from flake.nix.
+{
+  "format_on_save": "on",
+  "auto_install_extensions": {
+    "nix": true
+  },
+  "languages": {
+    "Markdown": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "rumdl",
+          "arguments": ["fmt", "--stdin", "--stdin-filename", "{buffer_path}", "--silent"]
+        }
+      }
+    },
+    "Nix": {
+      "language_servers": ["nixd", "!nil"],
+      "formatter": {
+        "external": {
+          "command": "nixfmt"
+        }
+      }
+    }
+  }
+}

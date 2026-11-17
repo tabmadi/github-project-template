@@ -99,6 +99,9 @@
             cocogitto
             rumdl
             gitleaks
+            # The language server and formatter of flake.nix, for the editor.
+            nixd
+            nixfmt
           ];
           shellHook = (hooks pkgs).shellHook;
         };
