@@ -69,9 +69,9 @@ Open the folder in Zed, and run `direnv allow` once. Zed suggests its Nix extens
 ├── docs/adr/               The decisions of the project: foundations, doc conventions, toolchain
 ├── template/               What only the template needs: its contract, checks, and outputs
 ├── .envrc                  Enters the dev shell through direnv
-├── .justfile               Tasks
 ├── flake.nix               The dev shell, the git hooks, and the checks
 ├── flake.lock              The pinned nixpkgs and inputs
+├── justfile                Tasks
 ├── AGENTS.md               Hints for coding agents
 ├── README.md
 └── LICENSE
@@ -90,7 +90,7 @@ Then follow the steps that it prints:
 1. In the new folder, run `git init` and `git add -A`. A flake sees only the files that git tracks.
 2. Run `nix develop`. It downloads the tools and installs the git hooks.
 3. Add your language tools to the dev shell in `flake.nix`, and your checks under `checks`.
-4. Fill in the `format`, `lint`, and `test` recipes in `.justfile` with real commands. Keep the recipe names.
+4. Fill in the `format`, `lint`, and `test` recipes in `justfile` with real commands. Keep the recipe names.
 5. Rewrite this README with the template skeleton from [readme-template](https://github.com/tabmadi/readme-template).
 6. Update the contacts in `.github/SECURITY.md` and the copyright line in `LICENSE`.
 7. Install the [Renovate app](https://github.com/apps/renovate) on the new repository.

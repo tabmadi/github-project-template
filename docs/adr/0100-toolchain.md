@@ -72,7 +72,9 @@ A recipe that calls a tool runs only inside the dev shell. Outside it, the recip
 
 ### One formatter for each file type
 
-Every text format that git tracks has one formatter in the dev shell. `rumdl` formats Markdown, `nixfmt` formats Nix, dprint formats JSON, JSONC, TOML, and YAML, and `just --fmt` formats the `.justfile`. Each formatter uses two spaces and LF line endings, by its config or by default. The repo has no `.editorconfig`: the formatters and their checks are the only rules.
+Every text format that git tracks has one formatter in the dev shell. `rumdl` formats Markdown, `nixfmt` formats Nix, dprint formats JSON, JSONC, TOML, and YAML, and `just --fmt` formats the `justfile`. Each formatter uses two spaces and LF line endings, by its config or by default. The repo has no `.editorconfig`: the formatters and their checks are the only rules.
+
+A file that a person reads or runs stays visible at the repo root: `README.md`, `LICENSE`, `AGENTS.md`, `flake.nix`, and `justfile`. A file that only a tool reads is hidden, with a dot name or inside a dot folder.
 
 Every tool config lives in `.config/`. `rumdl` finds its config there by itself. gitleaks reads its path from an environment variable that `flake.nix` sets in the dev shell, the checks, and the hooks. cog takes the path as a flag, so every recipe, check, hook, and workflow passes it. The `just` recipes are the one way to run a tool, so a tool that someone calls without the flag is outside the contract.
 
@@ -160,6 +162,7 @@ Renovate needs the Renovate GitHub app on the repository. Without it, the pins g
 - The git hooks are declared in `flake.nix`, and entering the dev shell installs them.
 - The language servers and formatters of the editor come from the dev shell.
 - Every text format that git tracks has one formatter in the dev shell, and a check in `flake.nix`. `(CI: ci)`
+- A file that a person reads or runs is visible at the repo root. A file that only a tool reads is hidden.
 - Every tool config lives in `.config/`. A tool that does not find its config there gets the path from `flake.nix` or a flag.
 - The editor formats only with the formatters of the repo.
 - `.zed/` holds project settings only. No check depends on the editor.

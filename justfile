@@ -31,7 +31,7 @@ lint-secrets: in-shell
 lint-data: in-shell
     dprint check
 
-# .justfile format, per ADR-0100
+# justfile format, per ADR-0100
 lint-just:
     just --fmt --check
 

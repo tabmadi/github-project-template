@@ -101,7 +101,7 @@
               enable = true;
               name = "just --fmt";
               entry = "${pkgs.just}/bin/just --fmt --check";
-              files = "(^|/)\\.?justfile$";
+              files = "(^|/)justfile$";
               pass_filenames = false;
             };
             secrets = {
