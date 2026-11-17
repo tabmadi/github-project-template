@@ -1,7 +1,7 @@
 # ADR-0001: Documentation conventions
 
-**Status:** Accepted
-**Decides:** The house style for every document, comment, and UI string: Simple English on the ASD-STE100 model.
+- **Status:** Accepted
+- **Decides:** The house style for every document, comment, and UI string: Simple English on the ASD-STE100 model.
 
 ## Context
 

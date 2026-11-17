@@ -1,7 +1,7 @@
 # ADR-0100: Toolchain
 
-**Status:** Accepted
-**Decides:** Nix pins every tool and runs every check, `just` runs every task, and the same checks run at commit time, at push time, and in CI.
+- **Status:** Accepted
+- **Decides:** Nix pins every tool and runs every check, `just` runs every task, and the same checks run at commit time, at push time, and in CI.
 
 ## Context
 

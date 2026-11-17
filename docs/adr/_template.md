@@ -1,7 +1,7 @@
 # ADR-NNNN: Title
 
-**Status:** Accepted
-**Decides:** One sentence that names what this ADR settles.
+- **Status:** Accepted
+- **Decides:** One sentence that names what this ADR settles.
 
 <!--
 Written to ADR-0001. Before merging, check:

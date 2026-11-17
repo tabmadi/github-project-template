@@ -1,7 +1,7 @@
 # ADR-0000: Foundations
 
-**Status:** Accepted
-**Decides:** What this repo is, what a generated repo inherits from it, and the ADR process itself.
+- **Status:** Accepted
+- **Decides:** What this repo is, what a generated repo inherits from it, and the ADR process itself.
 
 ## Context
 
