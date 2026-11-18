@@ -10,7 +10,7 @@
     };
     # A new version is a new tag here.
     tabnix = {
-      url = "github:tabmadi/tabnix/v0.1.1";
+      url = "github:tabmadi/tabnix/v0.3.0";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
