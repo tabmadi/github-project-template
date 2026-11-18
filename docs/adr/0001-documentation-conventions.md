@@ -39,6 +39,21 @@ A sentence has one idea and at most 25 words. It uses active voice and present t
 
 Three or more steps are a numbered list, and each step starts with its verb. Three or more items that share two or more attributes are a table.
 
+### Shared terms
+
+Every repo uses these terms with one meaning. A repo names only the environments and tiers that it has. The last column maps each term to the names that other teams use.
+
+| Term | Meaning | Other names |
+| --- | --- | --- |
+| environment | A set of running systems with its own secrets and its own data | |
+| `local` | The environment on the machine of one engineer. Each engineer has one, and recreates it freely | development environment |
+| inner loop | The tier of `local` for daily work. The code under change runs natively, and stand-ins can replace what does not change | inner loop |
+| full tier | The tier of `local` that runs the configuration of the deployed environments, with only the local values | production-like ephemeral environment |
+| CI | The checks after a push. They run the same `just ci` as the machine of the engineer | outer loop |
+| `dev` | The first deployed environment, which the team shares | development, integration |
+| `staging` | The deployed environment that rehearses each release of `prod` | pre-production |
+| `prod` | The environment that real users reach | production |
+
 ### Punctuation
 
 Prose uses only the period, the comma, the colon, and the possessive apostrophe.
@@ -141,6 +156,7 @@ tablint checks most rules of this ADR: the profile, the punctuation, the banned 
 - Prose punctuation is the period, the comma, the colon, and the possessive apostrophe. `(CI: lint-prose)`
 - The em dash, the en dash, the ellipsis, curly quotes, and emoji appear in no tracked text file. Third-party text adopted verbatim is exempt. `(CI: lint-prose)`
 - Three or more steps are a numbered list. Three or more items with two or more shared attributes are a table.
+- An environment or a tier has the name and the meaning in the table of shared terms.
 - No document or comment holds chronology, intensifiers, hedges, meta-commentary, questions, planned work, or implementation status. `(CI: lint-prose)`
 - A number is stated only when doubling it would change the decision.
 - No tracked file links to an untracked one. `(CI: lint-prose)`
