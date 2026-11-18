@@ -9,6 +9,27 @@ A project made from this template copies its files, and the copies do not link b
 
 This repo is the language-agnostic base of the [blueprints](https://github.com/tabmadi/blueprints) set. Every other template in the set starts from it.
 
+## Decision drivers
+
+1. **No second tool.** A project is made with the tools that the repo already has.
+2. **No link back.** A project owns its files. Nothing ties it to the template after the copy.
+3. **Two paths.** A project can start from the command line and from the template button of GitHub.
+4. **Template files stay out.** A file that only the template needs never reaches a project.
+
+## Considered options
+
+| Option | 1 No second tool | 2 No link back | 3 Two paths | 4 Template files stay out | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| The GitHub template button alone | Yes | Yes | One path | No. It copies every file | Rejected on drivers 3 and 4 |
+| cookiecutter | Needs Python | Yes | One path | Yes | Rejected on drivers 1 and 3 |
+| Copier | Needs Python | No. It records the template version, so that a project takes later template changes | One path | Yes | Rejected on driver 2. A repo with setup modes and template updates can choose it |
+| **`nix flake new` with the `templates` output, and `just init` for the button** | **Yes** | **Yes** | **Yes** | **Yes. `template/` is filtered out, and `just init` removes it** | **Chosen** |
+
+Sources:
+
+- Copier updates a project from a later template version, and cookiecutter copies once: [Copier, comparisons](https://copier.readthedocs.io/en/stable/comparisons/).
+- [nix flake new](https://nix.dev/manual/nix/latest/command-ref/new-cli/nix3-flake-new).
+
 ## Decision
 
 ### Two scopes
@@ -28,7 +49,7 @@ GitHub's template button copies every file, `template/` included. In that copy, 
 
 ### What this template holds
 
-Nothing here is specific to one language or one project. Its project ADRs are [ADR-0000](../../docs/adr/0000-foundations.md), [ADR-0001](../../docs/adr/0001-documentation-conventions.md), and [ADR-0100](../../docs/adr/0100-toolchain.md).
+Nothing here is specific to one language or one project. Its project ADRs are listed in [the ADR index](../../docs/adr/README.md).
 
 ## Consequences
 
