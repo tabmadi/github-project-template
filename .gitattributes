@@ -1,1 +1,4 @@
 * text=auto eol=lf
+
+# bun2nix writes this lockfile. GitHub collapses it in diffs and leaves it out of the language stats.
+bun.nix linguist-generated
