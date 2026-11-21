@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-global-schema.json",
+  "description": [
+    "The renovate workflow reads this file through RENOVATE_CONFIG_FILE, per ADR-0102.",
+    "After each update, `just deps-sync` writes the files that follow the dependencies."
+  ],
+  "binarySource": "global",
+  "allowedCommands": ["^just deps-sync$"],
+  "postUpgradeTasks": {
+    "commands": ["just deps-sync"],
+    "executionMode": "branch"
+  }
+}
