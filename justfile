@@ -21,7 +21,7 @@ format: in-shell
 
 # Prose, comments, and ADRs, per ADR-0001
 lint-prose: in-shell
-    tablint check
+    tabrules check
 
 # Markdown structure and formatting, per ADR-0001
 lint-md: in-shell

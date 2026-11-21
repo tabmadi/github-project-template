@@ -16,7 +16,7 @@ It holds no application code. A repo made from it adds the language tools and fi
 | [cocogitto](https://docs.cocogitto.io) | Conventional Commits checks |
 | [rumdl](https://github.com/rvben/rumdl) | Markdown lint |
 | [dprint](https://dprint.dev) | JSON, TOML, and YAML format |
-| [tablint](https://github.com/tabmadi/tablint) | Prose, comments, and ADRs |
+| [tabrules](https://github.com/tabmadi/tabrules) | Prose, comments, and ADRs |
 | [gitleaks](https://github.com/gitleaks/gitleaks) | Secret scan |
 | [Renovate](https://docs.renovatebot.com) | Updates to the pinned versions |
 
