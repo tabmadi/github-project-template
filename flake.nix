@@ -1,4 +1,4 @@
-# The toolchain, the git hooks, and the checks, per ADR-0100. The tabnix module holds every shared part.
+# The toolchain, the git hooks, and the checks, per ADR-0100. The tabkit module holds every shared part.
 {
   description = "The language-agnostic base for a new repository";
 
@@ -9,19 +9,19 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     # A new version is a new tag here.
-    tabnix = {
-      url = "github:tabmadi/tabnix/v0.15.0";
+    tabkit = {
+      url = "github:tabmadi/tabkit/v0.16.0";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
   };
 
   outputs =
-    inputs@{ flake-parts, tabnix, ... }:
+    inputs@{ flake-parts, tabkit, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       # The template scope adds its own checks and outputs. A copy has no template/ folder, so it adds nothing.
       imports = [
-        tabnix.flakeModules.default
+        tabkit.flakeModules.default
       ]
       ++ inputs.nixpkgs.lib.optional (builtins.pathExists ./template/scope.nix) ./template/scope.nix;
     };
