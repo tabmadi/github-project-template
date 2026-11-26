@@ -61,7 +61,7 @@ Open the folder in Zed, and run `direnv allow` once. Zed suggests its Nix extens
 │   ├── gitleaks.toml       Secret scan rules
 │   └── rumdl.toml          Markdown rules
 ├── .github/
-│   ├── ISSUE_TEMPLATE/     Bug, feature, and documentation issue forms
+│   ├── ISSUE_TEMPLATE/     Bug, feature, documentation, and maintenance forms
 │   ├── workflows/check.yml The CI gate: just ci
 │   ├── CODE_OF_CONDUCT.md
 │   ├── PULL_REQUEST_TEMPLATE.md
