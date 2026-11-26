@@ -274,16 +274,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1795536108,
-        "narHash": "sha256-eQCjvdQnFun+PbKwtkdzY8E+1JVEJtQqg7f8l5nS1m0=",
+        "lastModified": 1795706800,
+        "narHash": "sha256-v3LWKvJQKDg8TTOFrJh7H0H4F0ecmSQMqjGKW8Et9Wc=",
         "owner": "tabmadi",
         "repo": "tabkit",
-        "rev": "0f50dd56f96ebed0647762a61d89f6e7ade23e00",
+        "rev": "2bda32b5a6f202aa472fc293993b84a6c1326dcd",
         "type": "github"
       },
       "original": {
         "owner": "tabmadi",
-        "ref": "v0.24.0",
+        "ref": "v0.26.0",
         "repo": "tabkit",
         "type": "github"
       }
